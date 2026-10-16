@@ -20,6 +20,27 @@ cargo install iggy-cli
 
 Run `iggy --help` for the full command tree.
 
+## TCP TLS With a Private CA
+
+Pass your CA certificate in PEM format. The TLS domain must match the server certificate:
+
+```bash
+iggy --tcp-server-address iggy.example.com:8090 \
+  --tcp-tls-enabled --tcp-tls-domain iggy.example.com \
+  --tcp-tls-ca-file /path/to/ca.pem ping
+```
+
+To save these settings in a context:
+
+```bash
+iggy context create production --tcp-server-address iggy.example.com:8090 \
+  --tcp-tls-enabled true --tcp-tls-domain iggy.example.com \
+  --tcp-tls-ca-file /path/to/ca.pem
+iggy context use production
+```
+
+Command-line options override the active context. Certificate verification remains enabled.
+
 ![CLI](https://raw.githubusercontent.com/apache/iggy/refs/heads/master/assets/cli.png)
 
 ## Links

@@ -47,7 +47,7 @@ pub(crate) enum ContextAction {
     ///  iggy context create dev --transport http --http-api-url http://localhost:3000
     ///  iggy context create local --username iggy --password iggy
     #[clap(verbatim_doc_comment, visible_alias = "c")]
-    Create(ContextCreateArgs),
+    Create(Box<ContextCreateArgs>),
 
     /// Delete an existing context
     ///
@@ -114,6 +114,14 @@ pub(crate) struct ContextCreateArgs {
     #[clap(long)]
     pub(crate) tcp_tls_enabled: Option<bool>,
 
+    /// Server name to verify for TCP TLS
+    #[clap(long)]
+    pub(crate) tcp_tls_domain: Option<String>,
+
+    /// PEM CA certificate file for TCP TLS
+    #[clap(long)]
+    pub(crate) tcp_tls_ca_file: Option<String>,
+
     /// Iggy server username
     #[clap(short, long)]
     pub(crate) username: Option<String>,
@@ -144,6 +152,8 @@ impl From<ContextCreateArgs> for ContextConfig {
                 http_api_url: args.http_api_url,
                 quic_server_address: args.quic_server_address,
                 tcp_tls_enabled: args.tcp_tls_enabled,
+                tcp_tls_domain: args.tcp_tls_domain,
+                tcp_tls_ca_file: args.tcp_tls_ca_file,
                 ..Default::default()
             },
             extra: Default::default(),
@@ -178,6 +188,8 @@ mod tests {
             http_api_url: None,
             quic_server_address: None,
             tcp_tls_enabled: Some(true),
+            tcp_tls_domain: Some("iggy.example.com".to_string()),
+            tcp_tls_ca_file: Some("ca.pem".to_string()),
             username: Some("admin".to_string()),
             password: Some("secret".to_string()),
             token: Some("tok123".to_string()),
@@ -198,6 +210,11 @@ mod tests {
         assert!(config.iggy.http_api_url.is_none());
         assert!(config.iggy.quic_server_address.is_none());
         assert_eq!(config.iggy.tcp_tls_enabled, Some(true));
+        assert_eq!(
+            config.iggy.tcp_tls_domain.as_deref(),
+            Some("iggy.example.com")
+        );
+        assert_eq!(config.iggy.tcp_tls_ca_file.as_deref(), Some("ca.pem"));
     }
 
     #[test]
@@ -209,6 +226,8 @@ mod tests {
             http_api_url: None,
             quic_server_address: None,
             tcp_tls_enabled: None,
+            tcp_tls_domain: None,
+            tcp_tls_ca_file: None,
             username: None,
             password: None,
             token: None,
@@ -222,5 +241,7 @@ mod tests {
         assert!(config.token.is_none());
         assert!(config.token_name.is_none());
         assert!(config.iggy.transport.is_none());
+        assert!(config.iggy.tcp_tls_domain.is_none());
+        assert!(config.iggy.tcp_tls_ca_file.is_none());
     }
 }

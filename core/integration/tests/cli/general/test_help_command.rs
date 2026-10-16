@@ -108,6 +108,9 @@ Options:
 {CLAP_INDENT}
           [default: localhost]
 
+      --tcp-tls-ca-file <TCP_TLS_CA_FILE>
+          PEM CA certificate file for TCP TLS
+
       --quic-client-address <QUIC_CLIENT_ADDRESS>
           The optional client address for the QUIC transport
 {CLAP_INDENT}

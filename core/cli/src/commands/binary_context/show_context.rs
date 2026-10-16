@@ -114,6 +114,7 @@ impl ShowContextCmd {
         );
         Self::add_opt_bool(&mut table, "TCP TLS Enabled", iggy.tcp_tls_enabled);
         Self::add_opt_str(&mut table, "TCP TLS Domain", &iggy.tcp_tls_domain);
+        Self::add_opt_str(&mut table, "TCP TLS CA File", &iggy.tcp_tls_ca_file);
 
         Self::add_opt_str(&mut table, "QUIC Client Address", &iggy.quic_client_address);
         Self::add_opt_str(&mut table, "QUIC Server Address", &iggy.quic_server_address);

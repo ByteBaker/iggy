@@ -104,6 +104,11 @@ pub struct ArgsOptional {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub tcp_tls_domain: Option<String>,
 
+    /// PEM CA certificate file for TCP TLS
+    #[arg(long)]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub tcp_tls_ca_file: Option<String>,
+
     /// The optional client address for the QUIC transport
     ///
     /// [default: 127.0.0.1:0]
@@ -458,6 +463,9 @@ impl From<Vec<ArgsOptional>> for Args {
             if let Some(tcp_tls_domain) = optional_args.tcp_tls_domain {
                 args.tcp_tls_domain = tcp_tls_domain;
             }
+            if let Some(tcp_tls_ca_file) = optional_args.tcp_tls_ca_file {
+                args.tcp_tls_ca_file = Some(tcp_tls_ca_file);
+            }
             if let Some(quic_client_address) = optional_args.quic_client_address {
                 args.quic_client_address = quic_client_address;
             }
@@ -526,6 +534,24 @@ impl From<Vec<ArgsOptional>> for Args {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn should_merge_tcp_tls_ca_file() {
+        let context = || {
+            ArgsOptional::try_parse_from(["iggy", "--tcp-tls-ca-file", "context-ca.pem"]).unwrap()
+        };
+        let cli =
+            ArgsOptional::try_parse_from(["iggy", "--tcp-tls-ca-file", "cli-ca.pem"]).unwrap();
+
+        let defaults = Args::from(vec![ArgsOptional::default()]);
+        assert_eq!(defaults.tcp_tls_ca_file, None);
+
+        let inherited = Args::from(vec![context(), ArgsOptional::default()]);
+        assert_eq!(inherited.tcp_tls_ca_file.as_deref(), Some("context-ca.pem"));
+
+        let overridden = Args::from(vec![context(), cli]);
+        assert_eq!(overridden.tcp_tls_ca_file.as_deref(), Some("cli-ca.pem"));
+    }
 
     fn args_with_transport(transport: &str) -> Args {
         Args {

@@ -326,7 +326,7 @@ fn get_command(
             }
             ContextAction::Create(create_args) => {
                 let context_name = create_args.context_name.clone();
-                Box::new(CreateContextCmd::new(context_name, create_args.into()))
+                Box::new(CreateContextCmd::new(context_name, (*create_args).into()))
             }
             ContextAction::Delete(delete_args) => {
                 Box::new(DeleteContextCmd::new(delete_args.context_name.clone()))

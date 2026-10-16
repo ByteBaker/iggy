@@ -184,6 +184,12 @@ Options:
 {CLAP_INDENT}
 {CLAP_INDENT}[possible values: true, false]
 
+      --tcp-tls-domain <TCP_TLS_DOMAIN>
+{CLAP_INDENT}Server name to verify for TCP TLS
+
+      --tcp-tls-ca-file <TCP_TLS_CA_FILE>
+{CLAP_INDENT}PEM CA certificate file for TCP TLS
+
   -u, --username <USERNAME>
 {CLAP_INDENT}Iggy server username
 
@@ -226,6 +232,8 @@ Options:
       --http-api-url <HTTP_API_URL>                The API URL for the HTTP transport
       --quic-server-address <QUIC_SERVER_ADDRESS>  The server address for the QUIC transport
       --tcp-tls-enabled <TCP_TLS_ENABLED>          Flag to enable TLS for the TCP transport [possible values: true, false]
+      --tcp-tls-domain <TCP_TLS_DOMAIN>            Server name to verify for TCP TLS
+      --tcp-tls-ca-file <TCP_TLS_CA_FILE>          PEM CA certificate file for TCP TLS
   -u, --username <USERNAME>                        Iggy server username
   -p, --password <PASSWORD>                        Iggy server password
   -t, --token <TOKEN>                              Iggy server personal access token
